@@ -1,0 +1,7 @@
+{
+  "name": "Surgical Note Scanner",
+  "description": "Gerenciador de notas de sala cirúrgica com digitalização via OCR/IA.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
