@@ -1,6 +1,7 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DataService } from '../services/data.service';
+import QRCode from 'qrcode';
 
 @Component({
   selector: 'app-print-sheet',
@@ -13,7 +14,7 @@ import { DataService } from '../services/data.service';
         <div>
           <h2 class="text-lg font-bold text-gray-800">Visualização de Impressão</h2>
           <p class="text-sm text-gray-500">
-            Modelo: <strong class="text-gray-800">{{ dataService.currentTemplate().name }}</strong>
+            Modelo: <strong class="text-gray-800">{{ dataService.currentTemplate()?.name }}</strong>
           </p>
         </div>
         <button 
@@ -33,7 +34,7 @@ import { DataService } from '../services/data.service';
           <div class="border-b-2 border-black pb-4 mb-6 flex justify-between items-end">
             <div>
               <h1 class="text-3xl font-bold uppercase tracking-wide text-black mb-2">Nota de Sala Cirúrgica</h1>
-              <div class="text-lg font-semibold text-gray-800 mb-4">{{ dataService.currentTemplate().name }}</div>
+              <div class="text-lg font-semibold text-gray-800 mb-4">{{ dataService.currentTemplate()?.name }}</div>
               <div class="text-sm text-gray-600 mt-2 space-y-1">
                 <p>Data: _____/_____/_______</p>
                 <p>Sala: __________________</p>
@@ -41,9 +42,13 @@ import { DataService } from '../services/data.service';
               </div>
             </div>
             <div class="text-right">
-              <div class="border-2 border-black p-2 w-24 h-24 flex items-center justify-center text-center text-xs font-mono mb-2">
-                QR/ID<br>(Opcional)
-              </div>
+              @if(qrCodeUrl()) {
+                <img [src]="qrCodeUrl()" alt="QR Code Identificação do Modelo" class="w-24 h-24 print:filter-none">
+              } @else {
+                <div class="border-2 border-black p-2 w-24 h-24 flex items-center justify-center text-center text-xs font-mono">
+                  Gerando QR...
+                </div>
+              }
             </div>
           </div>
 
@@ -93,7 +98,7 @@ import { DataService } from '../services/data.service';
           </div>
           
           <div class="mt-8 text-center text-xs text-gray-400 font-mono">
-            Gerado por Surgical Note Scanner - {{ dataService.currentTemplate().name }}
+            Gerado por Scanner NS - {{ dataService.currentTemplate()?.name }}
           </div>
 
         </div>
@@ -104,6 +109,30 @@ import { DataService } from '../services/data.service';
 })
 export class PrintSheetComponent {
   dataService = inject(DataService);
+  qrCodeUrl = signal<string>('');
+
+  constructor() {
+    effect(async () => {
+      const template = this.dataService.currentTemplate();
+      if (template) {
+        const qrData = JSON.stringify({
+          id: template.id,
+          name: template.name,
+        });
+        try {
+          const url = await QRCode.toDataURL(qrData, { 
+            errorCorrectionLevel: 'H',
+            margin: 1,
+            width: 96 // 96x96 pixels
+          });
+          this.qrCodeUrl.set(url);
+        } catch (err) {
+          console.error('Failed to generate QR code', err);
+          this.qrCodeUrl.set(''); // Clear on error
+        }
+      }
+    });
+  }
 
   print() {
     window.print();

@@ -8,14 +8,14 @@ import { DataService, Material } from '../services/data.service';
   standalone: true,
   imports: [CommonModule, FormsModule],
   template: `
-    <div class="p-6 h-full flex flex-col max-w-5xl mx-auto w-full">
+    <div class="p-4 md:p-6 h-full flex flex-col max-w-5xl mx-auto w-full overflow-y-auto">
       <header class="mb-6">
-        <h2 class="text-2xl font-bold text-gray-800">Gerenciador de Kits</h2>
-        <p class="text-gray-500">Defina os modelos de impressão para cada tipo de cirurgia.</p>
+        <h2 class="text-2xl font-bold text-gray-900">Gerenciador de Kits</h2>
+        <p class="text-gray-600">Defina os modelos de impressão para cada tipo de cirurgia.</p>
       </header>
 
       <!-- Template Selector / Manager -->
-      <div class="bg-medical-50 border border-medical-100 p-4 rounded-xl mb-6 shadow-sm">
+      <div class="bg-white border border-medical-200 p-4 rounded-xl mb-6 shadow-sm">
         <div class="flex flex-col md:flex-row gap-4 items-end md:items-center justify-between">
           
           <div class="flex-1 w-full md:w-auto">
@@ -26,7 +26,7 @@ import { DataService, Material } from '../services/data.service';
                 <input 
                   type="text" 
                   [(ngModel)]="editTemplateName" 
-                  class="flex-1 block w-full px-3 py-2 text-base border-gray-300 focus:outline-none focus:ring-medical-500 focus:border-medical-500 sm:text-sm rounded-md shadow-sm border"
+                  class="flex-1 block w-full px-3 py-2 text-base text-gray-900 bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-medical-500 rounded-md shadow-sm"
                   (keydown.enter)="saveTemplateEdit()"
                 >
                 <button (click)="saveTemplateEdit()" class="bg-green-500 text-white p-2 rounded-md hover:bg-green-600 shadow-sm" title="Salvar Nome">
@@ -40,10 +40,10 @@ import { DataService, Material } from '../services/data.service';
                   <select 
                     [ngModel]="dataService.currentTemplateId()" 
                     (ngModelChange)="dataService.selectTemplate($event)"
-                    class="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-medical-500 focus:border-medical-500 sm:text-sm rounded-md shadow-sm border"
+                    class="block w-full pl-3 pr-10 py-2 text-base text-gray-900 bg-white border border-gray-300 focus:outline-none focus:ring-medical-500 focus:border-medical-500 sm:text-sm rounded-md shadow-sm"
                   >
                     @for (tmpl of dataService.templates(); track tmpl.id) {
-                      <option [value]="tmpl.id">{{ tmpl.name }}</option>
+                      <option [value]="tmpl.id" class="text-gray-900">{{ tmpl.name }}</option>
                     }
                   </select>
                 </div>
@@ -60,14 +60,14 @@ import { DataService, Material } from '../services/data.service';
 
           <div class="flex gap-2">
             @if (isCreatingTemplate()) {
-              <div class="flex gap-2 items-center bg-white p-1 rounded-lg border border-gray-200 shadow-sm">
+              <div class="flex gap-2 items-center bg-white p-1 rounded-lg border border-gray-300 shadow-sm animate-fade-in">
                 <input 
                   type="text" 
                   [(ngModel)]="newTemplateName" 
-                  placeholder="Nome do novo modelo"
-                  class="px-2 py-1 text-sm outline-none border-none w-40"
+                  placeholder="Nome do modelo"
+                  class="px-2 py-1 text-sm outline-none border-none w-40 text-gray-900 placeholder-gray-500"
                   (keydown.enter)="saveNewTemplate()"
-                  autoFocus
+                  autofocus
                 >
                 <button (click)="saveNewTemplate()" class="bg-green-500 text-white p-1 rounded hover:bg-green-600">
                   <span class="material-icons text-sm">check</span>
@@ -81,7 +81,7 @@ import { DataService, Material } from '../services/data.service';
                 (click)="isCreatingTemplate.set(true); newTemplateName.set('')"
                 class="bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-2 px-4 rounded-lg text-sm flex items-center gap-2 transition-colors shadow-sm"
               >
-                <span class="material-icons text-sm">add</span> Novo Modelo
+                <span class="material-icons text-sm">add</span> Novo
               </button>
             }
 
@@ -98,28 +98,28 @@ import { DataService, Material } from '../services/data.service';
       </div>
 
       <!-- Add Material Form -->
-      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100 mb-6 relative">
+      <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-200 mb-6 relative">
         <div class="absolute -top-3 left-4 bg-white px-2 text-xs font-semibold text-gray-500">
-          Adicionar Item ao modelo "{{ dataService.currentTemplate().name }}"
+          Adicionar Item
         </div>
         
         <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-end mt-2">
           <div class="md:col-span-3">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Código</label>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Código</label>
             <input 
               type="text" 
               [(ngModel)]="newCode" 
               placeholder="Ex: SUT-001"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-500 focus:border-medical-500 outline-none transition-all"
+              class="w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-medical-500 outline-none transition-all placeholder-gray-500"
             >
           </div>
           <div class="md:col-span-7">
-            <label class="block text-sm font-medium text-gray-700 mb-1">Descrição do Material</label>
+            <label class="block text-sm font-bold text-gray-700 mb-1">Descrição do Material</label>
             <input 
               type="text" 
               [(ngModel)]="newName" 
               placeholder="Ex: Fio de Sutura..."
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-medical-500 focus:border-medical-500 outline-none transition-all"
+              class="w-full px-3 py-2 border border-gray-300 bg-white text-gray-900 rounded-lg focus:ring-2 focus:ring-medical-500 outline-none transition-all placeholder-gray-500"
               (keydown.enter)="add()"
             >
           </div>
@@ -136,73 +136,82 @@ import { DataService, Material } from '../services/data.service';
       </div>
 
       <!-- Material List -->
-      <div class="flex-1 overflow-auto bg-white rounded-xl shadow-sm border border-gray-100">
-        <table class="w-full text-left border-collapse">
-          <thead class="bg-gray-50 sticky top-0 z-10">
-            <tr>
-              <th class="p-4 font-semibold text-gray-600 border-b">Código</th>
-              <th class="p-4 font-semibold text-gray-600 border-b">Descrição</th>
-              <th class="p-4 font-semibold text-gray-600 border-b text-right">Ações</th>
-            </tr>
-          </thead>
-          <tbody class="divide-y divide-gray-100">
-            @for (item of dataService.materials(); track item.id) {
-              <tr class="hover:bg-gray-50 transition-colors group">
-                
-                @if (editingMaterialId() === item.id) {
-                  <!-- Edit Mode -->
-                  <td class="p-3">
+      <div class="flex-1 overflow-auto bg-white rounded-xl shadow-sm border border-gray-200 min-h-[200px]">
+        <!-- Desktop Headers (hidden on mobile) -->
+        <div class="hidden md:grid md:grid-cols-12 gap-4 p-4 bg-gray-100 sticky top-0 z-10 border-b border-gray-200 font-bold text-gray-700 text-sm">
+          <div class="md:col-span-3">Código</div>
+          <div class="md:col-span-7">Descrição</div>
+          <div class="md:col-span-2 text-right">Ações</div>
+        </div>
+        
+        <!-- List container -->
+        <div class="p-2 md:p-0">
+          @for (item of dataService.materials(); track item.id) {
+            <div class="border rounded-lg md:border-0 md:rounded-none mb-2 md:mb-0 md:border-b hover:bg-gray-50 transition-colors group animate-slide-in-up">
+              
+              @if (editingMaterialId() === item.id) {
+                <!-- Edit Mode Card/Row -->
+                <div class="p-3 grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+                  <div class="md:col-span-3">
+                    <label class="md:hidden text-xs font-bold text-gray-500 mb-1">Código</label>
                     <input 
                       [(ngModel)]="editMaterialCode" 
-                      class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-medical-500"
+                      class="w-full border border-gray-300 bg-white text-gray-900 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-medical-500"
                     >
-                  </td>
-                  <td class="p-3">
+                  </div>
+                  <div class="md:col-span-7">
+                    <label class="md:hidden text-xs font-bold text-gray-500 mb-1">Descrição</label>
                     <input 
                       [(ngModel)]="editMaterialName" 
-                      class="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-medical-500"
+                      class="w-full border border-gray-300 bg-white text-gray-900 rounded px-2 py-1.5 text-sm focus:ring-2 focus:ring-medical-500"
                     >
-                  </td>
-                  <td class="p-3 text-right flex justify-end gap-1">
-                     <button (click)="saveMaterialEdit()" class="text-green-600 bg-green-50 hover:bg-green-100 p-2 rounded-full" title="Salvar">
+                  </div>
+                  <div class="md:col-span-2 flex justify-end gap-1 mt-2 md:mt-0">
+                     <button (click)="saveMaterialEdit()" class="text-green-600 bg-green-50 hover:bg-green-100 p-2 rounded-full border border-green-200" title="Salvar">
                        <span class="material-icons text-sm block">check</span>
                      </button>
-                     <button (click)="cancelMaterialEdit()" class="text-gray-500 bg-gray-50 hover:bg-gray-100 p-2 rounded-full" title="Cancelar">
+                     <button (click)="cancelMaterialEdit()" class="text-gray-500 bg-gray-50 hover:bg-gray-100 p-2 rounded-full border border-gray-200" title="Cancelar">
                        <span class="material-icons text-sm block">close</span>
                      </button>
-                  </td>
-                } @else {
-                  <!-- Display Mode -->
-                  <td class="p-4 text-gray-800 font-medium">{{ item.code }}</td>
-                  <td class="p-4 text-gray-600">{{ item.name }}</td>
-                  <td class="p-4 text-right flex justify-end gap-1">
+                  </div>
+                </div>
+              } @else {
+                <!-- Display Mode Card/Row -->
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-x-4 gap-y-2 items-center p-3">
+                  <div class="md:col-span-3">
+                    <label class="md:hidden text-xs font-bold text-gray-500">Código</label>
+                    <p class="text-gray-900 font-medium">{{ item.code }}</p>
+                  </div>
+                  <div class="md:col-span-7">
+                    <label class="md:hidden text-xs font-bold text-gray-500">Descrição</label>
+                    <p class="text-gray-700 text-sm md:text-base">{{ item.name }}</p>
+                  </div>
+                  <div class="md:col-span-2 flex justify-end gap-1 mt-2 md:mt-0">
                     <button 
                       (click)="startMaterialEdit(item)"
-                      class="text-blue-400 hover:text-blue-600 p-2 rounded-full hover:bg-blue-50 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                      class="text-blue-500 hover:text-blue-700 p-2 rounded-full hover:bg-blue-50 transition-opacity opacity-100 md:opacity-0 group-hover:opacity-100 focus:opacity-100"
                       title="Editar"
                     >
                       <span class="material-icons text-sm block">edit</span>
                     </button>
                     <button 
                       (click)="dataService.removeMaterial(item.id)"
-                      class="text-red-400 hover:text-red-600 p-2 rounded-full hover:bg-red-50 transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100"
+                      class="text-red-500 hover:text-red-700 p-2 rounded-full hover:bg-red-50 transition-opacity opacity-100 md:opacity-0 group-hover:opacity-100 focus:opacity-100"
                       title="Remover"
                     >
                       <span class="material-icons text-sm block">delete</span>
                     </button>
-                  </td>
-                }
-              </tr>
-            } @empty {
-              <tr>
-                <td colspan="3" class="p-12 text-center text-gray-400">
-                  <span class="material-icons text-4xl mb-2 text-gray-300">format_list_bulleted</span>
-                  <p>Este modelo não possui materiais cadastrados.</p>
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
+                  </div>
+                </div>
+              }
+            </div>
+          } @empty {
+            <div class="p-12 text-center text-gray-400">
+              <span class="material-icons text-4xl mb-2 text-gray-300">format_list_bulleted</span>
+              <p>Este modelo não possui materiais cadastrados.</p>
+            </div>
+          }
+        </div>
       </div>
     </div>
   `

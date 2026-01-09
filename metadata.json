@@ -1,6 +1,6 @@
 {
-  "name": "Surgical Note Scanner",
-  "description": "Gerenciador de notas de sala cirúrgica com digitalização via OCR/IA.",
+  "name": "Scanner NS",
+  "description": "Digitalizador de notas com tecnologia de IA.",
   "requestFramePermissions": [
     "camera"
   ]
